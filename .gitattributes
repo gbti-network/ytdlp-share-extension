@@ -1,0 +1,2 @@
+# Batch files must keep CRLF line endings; store them exactly as committed.
+*.cmd -text
