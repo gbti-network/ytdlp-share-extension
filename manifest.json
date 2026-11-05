@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "ytdlp share",
+  "version": "1.0.0",
+  "description": "Sends the YouTube video in this tab to yt-dlp on this computer and saves it as an MP4.",
+  "minimum_chrome_version": "105",
+  "permissions": [
+    "activeTab",
+    "nativeMessaging"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Download this YouTube video with yt-dlp",
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png"
+    }
+  },
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhS5QJi8/dSFTYcEMXBokSbN/pwiNkQIooQLOGwTptbZ8OYX/ZiXKp9bzfcjrQlZVyPDP5PK9Np/ZWQnn3RIRIYB06hgBw9MaWTdi1QlPM9Q+PkH0/IJ3PEzofqNxZ4uS/sXJdN/nncuSZXKoas9f/MESScI3BEOVm/OWjmLyN6011r6nBKkcTj/R+t+nTbXN/yvxaNWTeylOdMHAQjpVxKAtPJsC6IDwzetQyLiOf/iwkUUhhUsE8toa4H74F2J82sIBmKTVpZfkeX2byAMm6yR1vYltRPqXC+McZ2UcK8ZPSaL8fl3dLji6TTyHzeSEp87QhufPYos+53i1CVDD8wIDAQAB"
+}
