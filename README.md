@@ -18,7 +18,9 @@ Running the installer, `install.cmd`, changes these things and nothing else:
 - **Installs yt-dlp, Deno and FFmpeg if you do not have them,** through winget, as the packages
   `yt-dlp.yt-dlp`, `DenoLand.Deno` and `yt-dlp.FFmpeg`. yt-dlp downloads the video, Deno lets it solve
   YouTube's JavaScript challenge, and FFmpeg merges the video and audio into one file. All three are
-  portable packages that winget puts in your user profile, so no admin rights are needed.
+  portable packages that winget puts in your user profile, so no admin rights are needed. The
+  installer accepts winget's source and package agreements for you, and winget adds the tools to
+  your user PATH.
 - **Registers the helper with Chrome,** so the extension can start it. It writes
   `helper\network.gbti.ytdlp_share.json`, which allows only this extension's ID, and points one
   registry key at it: `HKCU\Software\Google\Chrome\NativeMessagingHosts\network.gbti.ytdlp_share`. The
@@ -31,11 +33,12 @@ Running the installer, `install.cmd`, changes these things and nothing else:
   `-OutputDir` removes that file.
 
 Each download then adds the video, in `Downloads\YouTube` or the folder you chose, and an entry in the
-helper's log, `helper\logs\yt-dlp.log`, with the video's URL and what yt-dlp printed.
+helper's log, `helper\logs\yt-dlp.log`, with the video's URL and what yt-dlp printed. yt-dlp and Deno
+also keep small caches in your user folder, `.cache\yt-dlp` and `AppData\Local\deno`.
 
 `uninstall.cmd` undoes the installer. It removes the registry key, those two files and the log. It
-leaves your videos, and it leaves yt-dlp, Deno and FFmpeg installed because other programs may use
-them. [Uninstall](#uninstall) shows how to remove those as well.
+leaves your videos, and it leaves yt-dlp, Deno, FFmpeg and their caches because other programs may
+use them. [Uninstall](#uninstall) shows how to remove those as well.
 
 ## Requirements
 
@@ -86,8 +89,8 @@ Confirm each point, citing file and line, and flag anything that does not match:
    yt-dlp.FFmpeg when they are missing; Unblock-File on the files in helper/; writes
    helper/network.gbti.ytdlp_share.json; writes helper/config.json only with -OutputDir, and deletes
    it on a run without -OutputDir; sets one registry key under
-   HKCU\Software\Google\Chrome\NativeMessagingHosts, creating that path if it is missing; and, unless -NoBrowser is given, copies the
-   extension folder's path to the clipboard and opens chrome://extensions.
+   HKCU\Software\Google\Chrome\NativeMessagingHosts, creating that path if it is missing; and,
+   unless -NoClipboard is given, copies the extension folder's path to the clipboard.
 5. uninstall.ps1 removes that registry key, those two files and helper/logs, and nothing else.
 6. helper/host.ps1 accepts only a single YouTube video URL, rebuilds it from the 11-character video ID,
    and starts yt-dlp without a shell, so nothing in a URL can add commands or options. The only file
@@ -113,9 +116,8 @@ In the same PowerShell window, run:
 
 You can also double-click `install.cmd` in the folder. It installs yt-dlp, Deno and FFmpeg with winget
 if you do not have them, and registers the helper with Chrome; the full list is under
-[What it changes on your PC](#what-it-changes-on-your-pc). When it finishes, the extension folder's
-path is on your clipboard and it opens `chrome://extensions` in Chrome. The window then says Done;
-press any key to finish.
+[What it changes on your PC](#what-it-changes-on-your-pc). When it finishes, the window says Done and
+the extension folder's path is on your clipboard, ready for step 4. Press any key to finish.
 
 To save videos somewhere other than `Downloads\YouTube`, give the installer a folder instead:
 
@@ -125,7 +127,7 @@ To save videos somewhere other than `Downloads\YouTube`, give the installer a fo
 
 ### 4. Load the extension in Chrome
 
-1. On `chrome://extensions` (if Chrome is not showing it, type that into the address bar), turn on
+1. In Chrome, type `chrome://extensions` into the address bar and press Enter. Turn on
    **Developer mode** (top right).
 2. Click **Load unpacked**. A folder picker opens.
 3. Click in the folder picker's address bar, paste the path (Ctrl+V) and press Enter. That opens the
@@ -191,6 +193,8 @@ Both mean running the installer again, which is safe.
    winget uninstall --id DenoLand.Deno -e
    winget uninstall --id yt-dlp.FFmpeg -e
    ```
+
+   Then delete their caches, `.cache\yt-dlp` and `AppData\Local\deno`, from your user folder.
 
 4. Delete the `ytdlp-share-extension` folder.
 

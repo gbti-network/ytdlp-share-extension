@@ -1,18 +1,18 @@
 # ytdlp share installer for Windows. Double-click install.cmd, or run:
-#   powershell -ExecutionPolicy Bypass -File install.ps1 [-OutputDir "D:\Videos\YouTube"] [-NoBrowser]
+#   powershell -ExecutionPolicy Bypass -File install.ps1 [-OutputDir "D:\Videos\YouTube"] [-NoClipboard]
 #
 #   1. Installs yt-dlp, Deno and FFmpeg with winget if they are missing.
 #   2. Registers the helper with Chrome for this Windows user: writes
 #      helper\network.gbti.ytdlp_share.json and one registry key,
 #      HKCU\Software\Google\Chrome\NativeMessagingHosts\network.gbti.ytdlp_share. No admin rights.
-#   3. Copies the extension folder's path to the clipboard and opens chrome://extensions
-#      (skipped with -NoBrowser).
+#   3. Copies the extension folder's path to the clipboard (skipped with -NoClipboard). It cannot open
+#      chrome://extensions for you: Chrome ignores chrome:// addresses passed on its command line.
 #
 # Safe to run again. Undo with uninstall.cmd. Keep this file ASCII (PowerShell 5.1 reads it as ANSI).
 
 param(
   [string]$OutputDir,
-  [switch]$NoBrowser
+  [switch]$NoClipboard
 )
 
 $ErrorActionPreference = 'Stop'
@@ -91,13 +91,12 @@ try {
   }
 
   Write-Step '3/3  Load the extension in Chrome'
-  Write-Host '     1. Open chrome://extensions and turn on Developer mode (top right).'
+  Write-Host '     1. In Chrome, type chrome://extensions in the address bar and turn on Developer mode (top right).'
   Write-Host '     2. Click Load unpacked and choose this folder:'
   Write-Host "        $ExtensionDir" -ForegroundColor Yellow
   Write-Host '     3. Pin the button from the puzzle-piece menu, open a YouTube video, click it.'
-  if (-not $NoBrowser) {
+  if (-not $NoClipboard) {
     try { Set-Clipboard -Value $ExtensionDir; Write-Host '     The folder path is on your clipboard: paste it into the folder picker.' } catch { }
-    try { Start-Process 'chrome.exe' 'chrome://extensions' } catch { }
   }
   Write-Host ''
   Write-Host 'Done.' -ForegroundColor Green
