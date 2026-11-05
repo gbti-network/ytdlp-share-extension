@@ -9,7 +9,7 @@ let running = 0;   // downloads in progress
 let failure = '';  // last error since the previous click, shown until the next click
 let timer;
 
-// One video only: HTTPS, a known YouTube host, an 11-character ID. Same rule as host/host.js.
+// One video only: HTTPS, a known YouTube host, an 11-character ID. Same rule as helper/host.ps1.
 function videoUrl(raw) {
   let url;
   try { url = new URL(raw); } catch { return null; }

@@ -48,6 +48,7 @@ function Read-Exactly([IO.Stream]$Stream, [int]$Count) {
 }
 
 # One video only: HTTPS, a known YouTube host, an 11-character ID. Same rule as extension/background.js.
+# \z, not $: in .NET, $ also matches before a trailing newline.
 function Get-VideoUrl($Raw) {
   if ($Raw -isnot [string]) { return $null }
   $uri = $null
@@ -66,11 +67,11 @@ function Get-VideoUrl($Raw) {
           break
         }
       }
-    } elseif ($uri.AbsolutePath -cmatch '^/(?:shorts|live|embed)/([A-Za-z0-9_-]{11})/?$') {
+    } elseif ($uri.AbsolutePath -cmatch '^/(?:shorts|live|embed)/([A-Za-z0-9_-]{11})/?\z') {
       $id = $Matches[1]
     }
   }
-  if ($id -is [string] -and $id -cmatch '^[A-Za-z0-9_-]{11}$') { return "https://www.youtube.com/watch?v=$id" }
+  if ($id -is [string] -and $id -cmatch '^[A-Za-z0-9_-]{11}\z') { return "https://www.youtube.com/watch?v=$id" }
   return $null
 }
 

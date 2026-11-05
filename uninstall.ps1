@@ -1,8 +1,9 @@
 # ytdlp share uninstaller. Double-click uninstall.cmd, or run:
 #   powershell -ExecutionPolicy Bypass -File uninstall.ps1
 #
-# Removes the registry key and the helper manifest that install.ps1 wrote. Leaves your videos, and
-# leaves yt-dlp, Deno and FFmpeg installed because other programs may use them.
+# Removes the registry key and the files install.ps1 wrote, and the helper's log (it lists the URLs you
+# downloaded). Leaves your videos, and leaves yt-dlp, Deno and FFmpeg installed because other programs
+# may use them.
 
 $ErrorActionPreference = 'Stop'
 $HelperDir = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Path) 'helper'
@@ -16,6 +17,8 @@ foreach ($generated in @("$HostName.json", 'config.json')) {
   $path = Join-Path $HelperDir $generated
   if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path }
 }
+$logs = Join-Path $HelperDir 'logs'
+if (Test-Path -LiteralPath $logs) { Remove-Item -LiteralPath $logs -Recurse }
 
 Write-Host ''
 Write-Host 'Now remove the extension at chrome://extensions. To remove the tools as well:'
